@@ -1,4 +1,5 @@
 ﻿using System;
+using Android.Animation;
 using Android.Content;
 using Android.Content.Res;
 using Android.Graphics;
@@ -240,6 +241,8 @@ namespace MPDC.Android.CircularProgress
             return progress;
         }
 
+
+        [Java.Interop.Export("setProgress")]
         public void setProgress(float progress)
         {
             this.progress = progress;
@@ -546,8 +549,23 @@ namespace MPDC.Android.CircularProgress
             setProgress(percent);
         }
 
+        ObjectAnimator animator;
+        public void AnimateCircular(float toValue)
+        {
+            if (animator != null)
+                animator.Cancel();
+            animator = ObjectAnimator.OfFloat(this, "Progress", 0.0f, toValue);
+            animator.SetInterpolator(new CustInterpolator());
+            animator.SetDuration(500);
+            animator.RepeatMode = ValueAnimatorRepeatMode.Restart;
+            animator.Start();
+        }
 
-
+        public float ValueProperty
+        {
+            get => getProgress();
+            set => setProgress(value);
+        }
 
 
         public float dp2px(Resources resources, float dp)
@@ -560,6 +578,14 @@ namespace MPDC.Android.CircularProgress
         {
             var scale = resources.DisplayMetrics.ScaledDensity;
             return sp * scale;
+        }
+    }
+
+    class CustInterpolator : Java.Lang.Object, ITimeInterpolator
+    {
+        public float GetInterpolation(float input)
+        {
+            return input * input;
         }
     }
 }

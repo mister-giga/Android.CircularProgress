@@ -7,7 +7,7 @@ namespace sample
     [Activity(Label = "sample", MainLauncher = true, Icon = "@mipmap/icon")]
     public class MainActivity : Activity
     {
-        int count = 1;
+        float count = 0;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -20,7 +20,15 @@ namespace sample
             // and attach an event to it
             Button button = FindViewById<Button>(Resource.Id.myButton);
 
-            button.Click += delegate { button.Text = $"{count++} clicks!"; };
+            var view = FindViewById<MPDC.Android.CircularProgress.CircularProgressView>(Resource.Id.donut_progress);
+            view.setMax(1);
+            button.Click += delegate
+            {
+                count += 0.1f;
+                view.AnimateCircular(count);
+            };
+
+
         }
     }
 }
