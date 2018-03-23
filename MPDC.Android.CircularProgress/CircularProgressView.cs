@@ -550,13 +550,14 @@ namespace MPDC.Android.CircularProgress
         }
 
         ObjectAnimator animator;
-        public void AnimateCircular(float toValue)
+        public void AnimateCircular(float toValue, int milliseconds = 500, ITimeInterpolator interpolator = null)
         {
             if (animator != null)
                 animator.Cancel();
             animator = ObjectAnimator.OfFloat(this, "Progress", 0.0f, toValue);
-            animator.SetInterpolator(new CustInterpolator());
-            animator.SetDuration(500);
+            if (interpolator != null)
+                animator.SetInterpolator(interpolator);
+            animator.SetDuration(milliseconds);
             animator.RepeatMode = ValueAnimatorRepeatMode.Restart;
             animator.Start();
         }
@@ -581,11 +582,11 @@ namespace MPDC.Android.CircularProgress
         }
     }
 
-    class CustInterpolator : Java.Lang.Object, ITimeInterpolator
-    {
-        public float GetInterpolation(float input)
-        {
-            return input * input;
-        }
-    }
+    //class CustInterpolator : Java.Lang.Object, ITimeInterpolator
+    //{
+    //    public float GetInterpolation(float input)
+    //    {
+    //        return input * input;
+    //    }
+    //}
 }
